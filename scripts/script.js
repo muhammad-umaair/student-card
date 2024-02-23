@@ -89,14 +89,14 @@ function updatePreview() {
   }
 }
 function splitTextWithTspan(text, maxLength) {
-  const words = text.split(' ');
+  const words = text.split(" ");
   let lines = [];
-  let currentLine = '';
+  let currentLine = "";
   let currentY = 0; // Initial x value
 
-  words.forEach(word => {
-    if ((currentLine + ' ' + word).length <= maxLength) {
-      currentLine += ' ' + word;
+  words.forEach((word) => {
+    if ((currentLine + " " + word).length <= maxLength) {
+      currentLine += " " + word;
     } else {
       lines.push({ text: currentLine.trim(), y: currentY });
       currentLine = word;
@@ -106,25 +106,26 @@ function splitTextWithTspan(text, maxLength) {
 
   lines.push({ text: currentLine.trim(), y: currentY });
 
-  return lines.map(line => `<tspan x="3.5" y="${line.y}">${line.text}</tspan>`).join('\n');
+  return lines
+    .map((line) => `<tspan x="3.5" y="${line.y}">${line.text}</tspan>`)
+    .join("\n");
 }
-
 
 function generatePDF() {
   var element = document.getElementById("card-preview");
   var svgElement = element.querySelector("svg");
-  svgElement.setAttribute("width", "106px");
-  svgElement.setAttribute("height", "159px");
+  svgElement.setAttribute("width", "189px");
+  svgElement.setAttribute("height", "283px");
   var opt = {
     filename: "student_card.pdf",
-    image: { type: "jpeg", quality: 1 },
+    image: { type: "pdf", quality: 4 },
     html2canvas: {
-      scale: 3,
+      scale: 5,
       logging: true,
-      dpi: 600,
+      dpi: 300,
       useCORS: true,
     },
-    jsPDF: { unit: "px", format: [106, 159], orientation: "portrait" },
+    jsPDF: { unit: "pt", format: [141.7323, 212.5984], orientation: "portrait" },
   };
   html2pdf().set(opt).from(element).save();
 }
