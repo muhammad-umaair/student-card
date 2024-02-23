@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
       updatePreview();
       generatePDF();
     });
-
-  //if we upload image then open this
   document
     .getElementById("student-image")
     .addEventListener("change", function (event) {
@@ -30,6 +28,26 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// function updatePreview() {
+//     var studentName = document.getElementById("student-name").value;
+//     var fatherName = document.getElementById("father-name").value;
+//     var motherName = document.getElementById("mother-name").value;
+//     var addressName = document.getElementById("address-name").value;
+//     var bloodName = document.getElementById("blood-type").value;
+
+//     var studentNameText = document.getElementById("student-name-text");
+//     var fatherNameText = document.getElementById("father-name-text");
+//     var motherNameText = document.getElementById("mother-name-text");
+//     var addressText = document.getElementById("address-name-text");
+//     var bloodText = document.getElementById("blood-name-text");
+
+//     if (studentNameText) studentNameText.getElementsByTagName("tspan")[0].textContent = studentName;
+//     if (fatherNameText) fatherNameText.getElementsByTagName("tspan")[0].textContent = fatherName;
+//     if (motherNameText) motherNameText.getElementsByTagName("tspan")[0].textContent = motherName;
+//     if (addressText) addressText.getElementsByTagName("tspan")[0].textContent = addressName;
+//     if (bloodText) bloodText.getElementsByTagName("tspan")[0].textContent = bloodName;
+//   }
+
 function updatePreview() {
   var studentName = document.getElementById("student-name").value;
   var fatherName = document.getElementById("father-name").value;
@@ -42,17 +60,34 @@ function updatePreview() {
   var motherNameText = document.getElementById("mother-name-text");
   var addressText = document.getElementById("address-name-text");
   var bloodText = document.getElementById("blood-name-text");
-  var studentNameSVG = document.getElementById("student-name-svg");
 
-  if (studentNameText) studentNameText.textContent = studentName;
-  if (fatherNameText) fatherNameText.textContent = fatherName;
-  if (motherNameText) motherNameText.textContent = motherName;
-  if (addressText) addressText.textContent = addressName;
-  if (bloodText) bloodText.textContent = bloodName;
-  if (studentNameSVG) studentNameSVG.textContent = studentName;
+  if (studentNameText) {
+    const tspan = studentNameText.getElementsByTagName("tspan")[0];
+    tspan.textContent = studentName;
+    // createTSpans(studentNameText, studentName, maxWidth);
+  }
+  if (fatherNameText) {
+    const tspan = fatherNameText.getElementsByTagName("tspan")[0];
+    tspan.textContent = fatherName;
+    // createTSpans(fatherNameText, fatherName, maxWidth);
+  }
+  if (motherNameText) {
+    const tspan = motherNameText.getElementsByTagName("tspan")[0];
+    tspan.textContent = motherName;
+    // createTSpans(motherNameText, motherName, maxWidth);
+  }
+  if (addressText) {
+    const tspan = addressText.getElementsByTagName("tspan")[0];
+    tspan.textContent = addressName;
+    // createTSpans(addressText, addressName, maxWidth);
+  }
+  if (bloodText) {
+    const tspan = bloodText.getElementsByTagName("tspan")[0];
+    tspan.textContent = bloodName;
+    // createTSpans(bloodText, bloodName, maxWidth);
+  }
 }
 
-//for upload image
 function generatePDF() {
   var element = document.getElementById("card-preview");
   var svgElement = element.querySelector("svg");
@@ -71,4 +106,3 @@ function generatePDF() {
   };
   html2pdf().set(opt).from(element).save();
 }
-
