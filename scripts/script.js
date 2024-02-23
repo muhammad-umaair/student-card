@@ -77,16 +77,38 @@ function updatePreview() {
     // createTSpans(motherNameText, motherName, maxWidth);
   }
   if (addressText) {
-    const tspan = addressText.getElementsByTagName("tspan")[0];
-    tspan.textContent = addressName;
-    // createTSpans(addressText, addressName, maxWidth);
+    // const tspan = addressText.getElementsByTagName("tspan")[0];
+    // tspan.textContent = addressName;
+    const maxLength = 20;
+    const formattedAddress = splitTextWithTspan(addressName, maxLength);
+    addressText.innerHTML = formattedAddress;
   }
   if (bloodText) {
     const tspan = bloodText.getElementsByTagName("tspan")[0];
     tspan.textContent = bloodName;
-    // createTSpans(bloodText, bloodName, maxWidth);
   }
 }
+function splitTextWithTspan(text, maxLength) {
+  const words = text.split(' ');
+  let lines = [];
+  let currentLine = '';
+  let currentY = 0; // Initial x value
+
+  words.forEach(word => {
+    if ((currentLine + ' ' + word).length <= maxLength) {
+      currentLine += ' ' + word;
+    } else {
+      lines.push({ text: currentLine.trim(), y: currentY });
+      currentLine = word;
+      currentY += 7;
+    }
+  });
+
+  lines.push({ text: currentLine.trim(), y: currentY });
+
+  return lines.map(line => `<tspan x="3.5" y="${line.y}">${line.text}</tspan>`).join('\n');
+}
+
 
 function generatePDF() {
   var element = document.getElementById("card-preview");
