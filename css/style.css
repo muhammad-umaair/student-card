@@ -1,0 +1,86 @@
+/*.card {*/
+/*  width: 50%;*/
+/*  height: 50%;*/
+/*  position: absolute;*/
+/*}*/
+/*#preview-image {*/
+/*  max-width: 100%;*/
+/*  max-height: 100%;*/
+/*  border-radius: 50%;*/
+/*}*/
+
+* {
+  box-sizing: border-box
+}
+
+/* Set height of body and the document to 100% */
+body,
+html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial;
+}
+
+/* Style tab links */
+.tablink {
+  background-color: #dbdada;
+  color: rgb(0, 0, 0);
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 25%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  color: white;
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+
+#Manually {
+  background-color: rgb(255, 255, 255);
+}
+
+#CSV {
+  background-color: rgb(255, 255, 255);
+}
+.card {
+  width: 50%;
+  height: 50%;
+  position:relative;
+}
+#preview-image {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 50%;
+}
+label{
+  color: black;
+}
+#card-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 595.3684pt;
+  /* height: 842.1053pt; */
+  height: 700pt;
+}
+#card-preview-svg{
+  border: rgb(196, 190, 190) solid 1px;
+}
+
+.card-csv {
+  width: 141.7323pt;
+  height: 212.5984pt;
+  margin: 3pt;
+  /* Optional: Add some space between the cards */
+  box-sizing: border-box;
+}
