@@ -8,6 +8,12 @@
 /*  max-height: 100%;*/
 /*  border-radius: 50%;*/
 /*}*/
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+@font-face {
+  font-family: Arial-BoldMT;
+  src: url(../font/ARIALBOLDMT.woff);
+}
 
 * {
   box-sizing: border-box

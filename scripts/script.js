@@ -76,11 +76,13 @@ function updatePreview() {
     tspan.textContent = motherName;
     // createTSpans(motherNameText, motherName, maxWidth);
   }
-  if (addressText) {
-    // const tspan = addressText.getElementsByTagName("tspan")[0];
-    // tspan.textContent = addressName;
+    if (addressText) {
+    // Remove double spaces from address
+    addressName = addressName.replace(/\s\s+/g, ' ');
+    console.log('addressName',addressName);
     const maxLength = 20;
     const formattedAddress = splitTextWithTspan(addressName, maxLength);
+    console.log('formattedAddress',formattedAddress);
     addressText.innerHTML = formattedAddress;
   }
   if (bloodText) {
@@ -200,7 +202,10 @@ function parseCSV(data) {
   cardsContainer.innerHTML = ''; // Clear existing cards
 
   lines.slice(1).forEach(async line => {
-    const [name, bloodType, fatherPhone, motherPhone, address, imageUrl] = line.split(',');
+    const [name, bloodType, fatherPhone, motherPhone, address, imageUrl] = line
+  .split(',')
+  .map(item => item.replace(/"/g, '').trim());
+    
     // Remove spaces from fatherPhone and motherPhone if they are not undefined
     if (fatherPhone) {
       fatherCell = fatherPhone.trim().replace(/\s+/g, '').replace(/"/g, '');
@@ -209,35 +214,38 @@ function parseCSV(data) {
       motherCell = motherPhone.trim().replace(/\s+/g, '').replace(/"/g, '');
     }
     let formattedAddress = '';
-    if (address) {
-      const words = address.trim().split(' ');
-      const maxWordsPerLine = 3; // Adjust this limit based on your needs
-      let yPosition = 0;
+      if (address) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.font = "10px Arial"; // Set the font for measuring text
+      const maxWidth = 120; // Maximum width of each line in pixels
+      const lineHeight = 7; // Line height
+      let yPosition = 0; // Starting Y position for the address
+      let currentLine = '';
 
+      const words = address.split(' ');
       words.forEach((word, index) => {
-        if (index % maxWordsPerLine === 0 && index !== 0) {
-          yPosition += 7; // Increment y position for the next line
-        }
-        if (index % maxWordsPerLine === 0) {
-          formattedAddress += `<tspan x="3.6" y="${yPosition}">${word}`;
+        let testLine = currentLine + word + ' ';
+        let testWidth = ctx.measureText(testLine).width;
+
+        if (testWidth > maxWidth && currentLine !== '') {
+          formattedAddress += `<tspan x="5" y="${yPosition}">${currentLine}</tspan>`;
+          currentLine = word + ' ';
+          yPosition += lineHeight;
         } else {
-          formattedAddress += ` ${word}`;
-        }
-        if ((index + 1) % maxWordsPerLine === 0 || index === words.length - 1) {
-          formattedAddress += `</tspan>`;
+          currentLine = testLine;
         }
       });
 
-      formattedAddress = `
-          ${formattedAddress}
-      `;
+      formattedAddress += `<tspan x="5" y="${yPosition}">${currentLine}</tspan>`;
     }
 
     if (name && imageUrl) {
       // Create a new image element to ensure it loads correctly
       const img = new Image();
       img.crossOrigin = 'Anonymous'; // Handle CORS if needed
-      img.src = imageUrl.trim();
+      img.src = imageUrl;
+      console.log('Image: ' + imageUrl.trim());
 
       img.onload = function () {
         const scale = window.devicePixelRatio || 2;
@@ -285,9 +293,7 @@ function parseCSV(data) {
                                 <path
                                     d="M97.9,14.8c0-.7.7-1,1.7-1s1.4.3,1.4.8v.6h2.5V14c0-1.9-2.4-2.4-4-2.4s-4.4,1-4.4,3.3,6,3.7,6,5.3-.7,1.1-1.5,1.1a5,5,0,0,1-3.4-1.6l-1.4,1.8a6.2,6.2,0,0,0,4.8,2.1,5.5,5.5,0,0,0,2.6-.6,1.4,1.4,0,0,1,1.4-1.4h0a3.7,3.7,0,0,0,.4-1.5C104,16.3,97.9,16.6,97.9,14.8Z"
                                     transform="translate(0)" fill="#e2464f" />
-                                <path
-                                    d="M32.2,7.1a8.1,8.1,0,0,1,8.2,8.1,8.3,8.3,0,1,1-16.5,0A8.1,8.1,0,0,1,32.2,7.1Zm0,13.7a5.3,5.3,0,0,0,5.1-5.6,5.2,5.2,0,1,0-10.3,0A5.3,5.3,0,0,0,32.2,20.8Z"
-                                    transform="translate(0)" fill="#e2464f" />
+                               <path xmlns="http://www.w3.org/2000/svg" fill="#E34750" d="M32.2,7.1c4.7,0,8.2,3.6,8.2,8.1c0,4.7-3.5,8.3-8.2,8.3c-4.7,0-8.2-3.7-8.2-8.3   C23.9,10.7,27.5,7.1,32.2,7.1z M32.2,20.8c2.9,0,5.2-2.4,5.2-5.6c0-3.1-2.3-5.4-5.2-5.4c-2.9,0-5.2,2.3-5.2,5.4   C27,18.4,29.3,20.8,32.2,20.8z"/>
                                 <path
                                     d="M42.8,10.4c0-.4-.1-.5-.5-.5h-.9V7.4h2.8c1.1,0,1.6.4,1.6,1.5V20.3a.5.5,0,0,0,.5.5h3.4c.4,0,.5-.2.5-.5v-.9h2.7v2.4c0,1-.4,1.5-1.5,1.5h-7c-1.1,0-1.6-.5-1.6-1.5Z"
                                     transform="translate(0)" fill="#e2464f" />
@@ -395,8 +401,18 @@ function parseCSV(data) {
             `;
         cardsContainer.innerHTML += cardHTML;
       };
-      img.src = imageUrl; // Set the image source URL
-      console.log('img.src = imageUrl', img.src = imageUrl);
+      
+      let profileImage = imageUrl.trim();
+      
+      if(img.src.includes('https://www.designkix.com/studentcard/%22')) {
+        console.log('Before: ' + img.src);
+        img.src = img.src.replace('https://www.designkix.com/studentcard/%22', '');
+        console.log('After: ' + img.src);
+      }
+      
+      //img.src = profileImage; // Set the image source URL
+      console.log(img.src)
+    //   console.log('img.src = imageUrl', img.src = imageUrl, profileImage);
     }
   }
   )
@@ -452,6 +468,7 @@ function downloadCardImage() {
     downloadText.style.display = 'inline';
   });
 }
+
 function showModal(extraRows) {
   // Get the modal
   const modal = document.getElementById("cardLimitModal");
@@ -483,8 +500,7 @@ function showModal(extraRows) {
   };
 }
 
-
-
+//close model 
 document.querySelector('.close').addEventListener('click', function() {
   // Close the modal (optional, if you're hiding the modal)
   document.getElementById('cardLimitModal').style.display = 'none';
